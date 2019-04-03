@@ -1,0 +1,31 @@
+#Step1: Download NGS data 
+#use sftp and the account details, password, etc. provided by the sequencing facility
+sftp -r data_13028@imb-sftp.imb.uq.edu.au:* .
+#check the download 
+md5sum *gz >h
+#cat h ../md5sum.txt |awk '{print $1}' | sort -k1 | uniq -d |wc -l
+#48 
+#chech the md5sum numbers! and compare with what the seq facility sent! otherwise transfer isnot complete! 
+#48 samples 24 each of R1 and R1 (in case of paired-end sequencing), 3 per sample > 8 libraries ! All good :) 
+
+
+#Step2: QCing samples usign FASTQC: use nano, vi, or any text editor to write this BASH and save as fastqc.sh
+#Check if you are using SLURM or PBS!
+
+#!/bin/bash
+#SBATCH --output  dump.out
+#SBATCH --error dump.err
+#SBATCH --mem=5gb
+#SBATCH --time=30:00
+#SBATCH --mail-user=amin.esmail@csiro.au
+/apps/fastqc/0.11.8/fastqc ${FILE}
+
+#in the terminal type: 
+for i `ls *fastq.gz`; do sbatch --export FILE=$i fastqc.sh ;done
+
+#inspect the files carefully, check for quality, adapters, etc... 
+
+
+
+
+
