@@ -24,8 +24,46 @@ md5sum *gz >h
 for i `ls *fastq.gz`; do sbatch --export FILE=$i fastqc.sh ;done
 
 #inspect the files carefully, check for quality, adapters, etc... 
+#assume you have high quality data! note you really care about that if you are going to assemble the reads, for mapping the aligner will do some QC before mapping 
 
+#Step3: prepare the refrence for mapping:
+open nano, type the following and save as bowtie2-build.sh
+#!/bin/bash
+#SBATCH --output  dump.out
+#SBATCH --error dump.err
+#SBATCH --mem=20gb
+#SBATCH --time=16:00:00
+#SBATCH --mail-user=amin.esmail@csiro.au
+module load bowtie
+module load samtools
+bowtie2-build genome.fq genome
 
+#Step4: Mapping reads using BOWTIE2 
+AGAIN open nano, print the following and save as  bowtie2-mapping.sh
+#!/bin/bash
+#SBATCH --output  dump.out
+#SBATCH --error dump.err
+#SBATCH --mem=20gb
+#SBATCH --time=16:00:00
+#SBATCH --mail-user=amin.esmail@csiro.au
+module load bowtie
+module load samtools
+bowtie2 --very-sensitive -x /PATH/name-of-the-index -1 ${FILE}_R1_001.fastq.gz -2 ${FILE}_R2_001.fastq.gz |samtools view -u - |samtools sort - >${FILE}.bam
 
+#To running the bowtie2-mapping.sh, you need a FILE variable which is the name of the sample without the suffix (_R1_001.fastq.gz AND _R2_001.fastq.gz) in my case 
+#in the terminal type the following, check your file names and change accordingly! Otherwise, with no surpise NOTHING will work 
+ls *fastq.gz |tr '_' "\t" |awk '{print $1"_"$2"_"$3}' |sort -k1 | uniq >file_names2  
+for i  in `cat file_names2`; do sbatch --export FILE=$i bowtie2.sh ;done
+
+#MAPPING STATSISTICS using samtools flagstat
+create a script for that called samtools_flagstat.sh
+#!/bin/bash
+#SBATCH --output  dump.out
+#SBATCH --error dump.err
+#SBATCH --mem=10gb
+#SBATCH --time=40:00
+#SBATCH --mail-user=amin.esmail@csiro.au
+module load samtools
+samtools flagstat ${FILE} >${FILE}.stats
 
 
