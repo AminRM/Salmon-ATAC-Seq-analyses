@@ -55,7 +55,7 @@ bowtie2 --very-sensitive -x /PATH/name-of-the-index -1 ${FILE}_R1_001.fastq.gz -
 ls *fastq.gz |tr '_' "\t" |awk '{print $1"_"$2"_"$3}' |sort -k1 | uniq >file_names2  
 for i  in `cat file_names2`; do sbatch --export FILE=$i bowtie2.sh ;done
 
-#MAPPING STATSISTICS using samtools flagstat
+#Step5:MAPPING STATSISTICS using samtools flagstat
 create a script for that called samtools_flagstat.sh
 #!/bin/bash
 #SBATCH --output  dump.out
@@ -65,5 +65,12 @@ create a script for that called samtools_flagstat.sh
 #SBATCH --mail-user=amin.esmail@csiro.au
 module load samtools
 samtools flagstat ${FILE} >${FILE}.stats
+
+#in the terminal type:
+for i in `ls *bam`; do sbatch --export FILE=$i samtools_flagstat.sh ;done
+
+#Step6:MARK and remove duplicates using MarkDuplicates through picard tools!
+04_MarkDuplicates.sh SCRIPT
+for i in `ls *bam`; do ./04_MarkDuplicates.sh $i ;done
 
 
