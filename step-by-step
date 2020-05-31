@@ -21,7 +21,7 @@ md5sum *gz >h
 /apps/fastqc/0.11.8/fastqc ${FILE}
 
 #in the terminal type: 
-for i in `ls *gz`; do sbatch --export FILE=$i fastqc.sh ;done
+for i in `ls *gz`; do sbatch --export FILE=$i fastQC.sh ;done
 #inspect the files carefully, check for quality, adapters, etc... 
 #assume you have high quality data! note you really care about that if you are going to assemble the reads, for mapping the aligner will do some QC before mapping 
 
