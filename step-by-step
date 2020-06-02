@@ -106,7 +106,6 @@ JOB=`sbatch  ${JOBNAME}_04.qsub`
 echo $JOB
 
 #Step6:merging alignment files per sample 
-
 samtools_merge.sh
 #! /bin/bash
 #SBATCH --output  dump.out
@@ -114,9 +113,23 @@ samtools_merge.sh
 #SBATCH --mem=10gb
 #SBATCH --time=6:00:00
 #SBATCH --mail-user=amin.esmail@csiro.au
-
 module load samtools
-
 samtools merge ${FILE}.dedup.bam ${FILE}_L001.bam.dedup_reads.bam ${FILE}_L002.bam.dedup_reads.bam ${FILE}_L003.bam.dedup_reads.bam ${FILE}_L004.bam.dedup_reads.bam
 
+#to excute type the following: 
+ls *bam |tr "_" "\t" |awk '{print $1"_"$2"_"$3}' |uniq |grep -v ATAC >files3
+for i in `cat files3` ;do sbatch --export FILE=$i samtools_merge.sh ;done
+
+#Step7:Quality multiple mapping filtering based on MAPQ using quality_multiple.sh
+#! /bin/bash
+#SBATCH --output  dump.out
+#SBATCH --error dump.err
+#SBATCH --mem=10gb
+#SBATCH --time=6:00:00
+#SBATCH --mail-user=amin.esmail@csiro.au
+module load samtools
+samtools view -b -q 10 ${FILE} >${FILE}.u.bam
+
+#to excute type the following to output reads that have been uniquely mapped!
+for i in `ls *dedup*bam | grep -v L00`; do sbatch --export FILE=$i quality_multiple.sh ;done
 
