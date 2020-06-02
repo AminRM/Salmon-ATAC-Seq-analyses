@@ -133,3 +133,52 @@ samtools view -b -q 10 ${FILE} >${FILE}.u.bam
 #to excute type the following to output reads that have been uniquely mapped!
 for i in `ls *dedup*bam | grep -v L00`; do sbatch --export FILE=$i quality_multiple.sh ;done
 
+#Step8:Passing final BAM files to bigWig format to help on the visualization
+
+Grep the header from a bamfiles to obtain the chromosome length and generate the genome.txt file
+samtools view -H file.bam|grep @SQ|sed 's/@SQ\tSN:\|LN://g' > genome.txt
+
+bam2bedGraph.sh
+#!/bin/bash
+#SBATCH --output  dump.out
+#SBATCH --error dump.err
+#SBATCH --mem=10gb
+#SBATCH --time=40:00
+#SBATCH --mail-user=amin.esmail@csiro.au
+module load bedtools
+bedtools genomecov -bg -split -ibam ${FILE} -g genome.txt > ${FILE}.split.bg
+bedtools genomecov -bg  -ibam ${FILE}  -g genome.txt > ${FILE}.bg
+
+#to excute type the following
+for i in `ls *u.bam`; do sbatch --export FILE=$i bam2bedGraph.sh;done
+
+From bedGraph to bigwig using the script bg2bWig_brahman.sh
+
+#!/bin/bash
+#SBATCH --output  dump.out
+#SBATCH --error dump.err
+#SBATCH --mem=10gb
+#SBATCH --time=40:00
+#SBATCH --mail-user=amin.esmail@csiro.au
+/apps/kentutils/v302/bin/bedGraphToBigWig ${FILE} genome.txt ${FILE}.bw
+
+Now check the peaks in these samples using IGV! 
+
+Step9: Peak calling using MACS2
+
+#!/bin/bash
+#SBATCH --output  dump.out
+#SBATCH --error dump.err
+#SBATCH --mem=10gb
+#SBATCH --time=6:00:00
+#SBATCH --mail-user=amin.esmail@csiro.au
+module load python
+macs2 callpeak -t ${FILE} -f BAMPE -n ${FILE}_BAMPE
+
+Step10: consensus set of peaks 
+
+Step11: counts reads per peak using HTSeq 
+
+Step12: Differential accessibility 
+
+Step13: Co-accessibility analyses
