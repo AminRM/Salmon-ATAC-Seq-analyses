@@ -1,12 +1,12 @@
-install.packages()
 library(edgeR)
 data = read.table("ATAC_peaks_raw_counts.matrix", header=T, row.names=1, com='')
+
+# DARs between T2 and T1
 col_ordering = c(4,5,6,1,2,3)
 rnaseqMatrix = data[,col_ordering]
 rnaseqMatrix = round(rnaseqMatrix)
 rnaseqMatrix = rnaseqMatrix[rowSums(cpm(rnaseqMatrix) > 1) >= 2,]
 conditions = factor(c(rep("T2", 3), rep("T1", 3)))
-
 exp_study = DGEList(counts=rnaseqMatrix, group=conditions)
 exp_study = calcNormFactors(exp_study)
 exp_study = estimateDisp(exp_study)
@@ -22,12 +22,12 @@ pdf("ATAC_peaks_raw_counts.matrix.T2_vs_T1.edgeR.DE_results.MA_n_Volcano.pdf")
 plot_MA_and_Volcano(rownames(result_table), result_table$logCPM, result_table$logFC, result_table$FDR)
 dev.off()
 
+# DARs between T2 and T1
 col_ordering = c(7,8,9,1,2,3)
 rnaseqMatrix = data[,col_orATAC_peaks_raw_counts.matrix.T2_vs_T1.edgeR.DE_results.MA_n_Volcano.pdfdering]
 rnaseqMatrix = round(rnaseqMatrix)
 rnaseqMatrix = rnaseqMatrix[rowSums(cpm(rnaseqMatrix) > 1) >= 2,]
 conditions = factor(c(rep("T3", 3), rep("T1", 3)))
-
 exp_study = DGEList(counts=rnaseqMatrix, group=conditions)
 exp_study = calcNormFactors(exp_study)
 exp_study = estimateDisp(exp_study)
@@ -43,12 +43,12 @@ pdf("ATAC_peaks_raw_counts.matrix.T3_vs_T1.edgeR.DE_results.MA_n_Volcano.pdf")
 plot_MA_and_Volcano(rownames(result_table), result_table$logCPM, result_table$logFC, result_table$FDR)
 dev.off()
 
+# DARs between T2 and T1
 col_ordering = c(10,11,12,1,2,3)
 rnaseqMatrix = data[,col_ordering]
 rnaseqMatrix = round(rnaseqMatrix)
 rnaseqMatrix = rnaseqMatrix[rowSums(cpm(rnaseqMatrix) > 1) >= 2,]
 conditions = factor(c(rep("T4", 3), rep("T1", 3)))
-
 exp_study = DGEList(counts=rnaseqMatrix, group=conditions)
 exp_study = calcNormFactors(exp_study)
 exp_study = estimateDisp(exp_study)
