@@ -3,7 +3,7 @@ pdf(file="liver_clusters_plot.pdf")
 par(mfrow=c(2, 2))
 par(cex=0.6)
 par(mar=c(7,4,4,2))
-# png(file="my_cluster_plots.png");
+# png(file="liver_clusters_plot.png");
 for (i in 1:length(files)) {
   data = read.table(files[i], header=T, row.names=1)
   ymin = min(data); ymax = max(data);
