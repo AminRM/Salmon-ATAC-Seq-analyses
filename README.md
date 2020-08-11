@@ -1,7 +1,7 @@
 # Salmon ATAC-seq analyses
 Mohamed et al (in prep) Integrated transcriptome, DNA methylome and chromatin state accessibility landscapes reveal regulators of Atlantic salmon maturation
 
-This repository contains srcipts to perform ATAC-seq analysis and integrative chromatin accessibility/transcriptome analyses. 
+This repository contains scripts to perform ATAC-seq analysis and integrative chromatin accessibility/transcriptome analyses. 
 
 the following scripts were used to perform dataQC, map ATAC-seq data to the Atlantic salmon reference genome ICSASG_v2 (Lien et al., 2016), perform post-mapping QC, peak calling and QC, perform differential accessibility analyses using the R package edgeR, perfom co-accessibility analyses, and cobmined acessibility/expression analysis 
 
