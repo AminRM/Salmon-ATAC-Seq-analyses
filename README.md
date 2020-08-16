@@ -11,6 +11,8 @@ genome mapping: bowtie2-build.sh and bowtie2-mapping.sh were used to index the s
 
 post-mapping QC: MarkDuplicates.sh, quality_multiple.sh for removal of PCR duplicates and retain uniquely mapped reads 
 
+peak calling: using MACS2 to call peaks 
+
 Differential accessibility analysis: Diff_access_edgeR.R for differential analysis using edgeR 
 
 Expression and accessibility co-analysis: genic_proxim_access_exp.awk describes the steps required to collect data for plotting as MA bi-plots 
